@@ -1,4 +1,4 @@
-const {Schema,model,Types}=require('mongoose');
+const {Schema,Types}=require('mongoose');
 
 const reactionsSchema=new Schema(
     {
@@ -21,3 +21,5 @@ const reactionsSchema=new Schema(
         }
     }
 );
+
+module.exports=reactionsSchema;
