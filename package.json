@@ -2,9 +2,9 @@
     "name": "talk_to_people_api",
     "version": "1.0.0",
     "description": "A totally legit API for social media",
-    "main": "server.js",
+    "main": "index.js",
     "scripts":{
-        "start": "node server.js"
+        "start": "node index"
     },
     "author": "Turner",
     "liscense": "ISC",
