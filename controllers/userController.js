@@ -1,7 +1,6 @@
 const {ObjectId}=require('mongoose').Types;
 const {User}=require('../models');
 
-
 module.exports={
     getUsers(req,res){
         User.find()
@@ -52,5 +51,29 @@ module.exports={
             .catch((err)=>{
                 res.status(500).json(err);
             })
-    }
-}
+    },
+    addFriend(req,res){
+        User.findOneAndUpdate(
+            {_id:req.params.userid},
+            {$addToSet:{friends: req.body}}
+        )
+            .then((user)=>
+                !user
+                    ?res.status(404).json({message:'No user found with that ID'})
+                    :res.json(user)
+            )
+            .catch((err)=>res.status(500).json(err));
+    },
+    removeFriend(req,res){
+        User.findOneAndUpdate(
+            {_id:req.params.userid},
+            {$pull:{friends:[{userid: req.params.userid}]}}
+        )
+        .then((user)=>
+            !user
+                ?res.status(404).json({message:'No user found with that ID'})
+                :res.json(user)
+            )
+            .catch((err)=>res.status(500).json(err));
+    },
+};
