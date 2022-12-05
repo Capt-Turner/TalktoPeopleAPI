@@ -4,12 +4,15 @@
     "description": "A totally legit API for social media",
     "main": "index.js",
     "scripts":{
-        "start": "node index"
+        "start": "node index",
+        "seed": "node utils/seed"
     },
     "author": "Turner",
     "liscense": "ISC",
     "dependencies": {
         "express": "^4.17.1",
-        "mongodb": "^4.5.0"
+        "mongodb": "^4.5.0",
+        "mongoose": "^6.0.13",
+        "console.table": "^0.10.0"
     }
 }
