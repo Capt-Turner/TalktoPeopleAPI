@@ -69,6 +69,18 @@ const thoughts=[
     'This site is pretty awesome',
 ];
 
+const reactions=[
+    'I agree',
+    'I disagree',
+    "That's cool",
+    'What?',
+    'Yes',
+    'No', 
+    'Sure',
+    'Thumbs up',
+    'Thumbs down'
+];
+
 
 
 const getRandomArrItem=(arr)=>arr[Math.floor(Math.random()*arr.length)];
@@ -79,4 +91,6 @@ const getRandomEmail=()=>`${getRandomArrItem(emails)}${Math.floor(Math.random()*
 
 const getRandomThoughts=()=>`${getRandomArrItem(thoughts)}${Math.floor(Math.random()*10)}`;
 
-module.exports={getRandomArrItem,getRandomUsername,getRandomEmail,getRandomThoughts};
+const getRandomReactions=()=>`${getRandomArrItem(reactions)}${Math.floor(Math.random()*5)}`;
+
+module.exports={getRandomArrItem,getRandomUsername,getRandomEmail,getRandomThoughts,getRandomReactions};
