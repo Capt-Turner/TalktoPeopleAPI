@@ -27,7 +27,7 @@ module.exports={
             })
     },
     reThink(req,res){
-        Thought.findbyIdAndUpdate(
+        Thought.findByIdAndUpdate(
             ObjectId(req.params.thoughtId),
             {$set:req.body}
         )
@@ -41,22 +41,22 @@ module.exports={
     async unThink(req,res){
         try{
             const thought= await Thought.findByIdAndRemove(ObjectId(req.params.thoughtId));
-            if(thought){
+            if(!thought){
+                res.status(404).json({message:"No thoughts found with that Id"});
+            } else{
                 const user=await User.updateOne(
                     {username:thought.username},
-                    {$pull:{thoughts:ObjectId(req.params.thoughtId)}}
-                );
-            } else{
-                res.status(404).json({message:"No thoughts found with that Id"});
+                    {$pull:{thoughts:ObjectId(req.params.thoughtId)}});
+                res.status(200).json({message:"Though removed"});
             }
-            res.status(200).json({message:"Though removed"});
+            
         }catch(err){
             console.log(err);
             res.status(500).json(err);
         }
     },
     react(req,res){
-        ThoughtfindByIdAndUpdate(
+        Thought.findByIdAndUpdate(
             ObjectId(req.params.thoughtId),
             {$addToSet:{
                 reactions:{

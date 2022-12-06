@@ -25,7 +25,7 @@ module.exports={
     },
     updateUser(req,res){
         User.findOneAndUpdate(
-            ObjectId(req.params.userid),
+            ObjectId(req.params.userId),
             {$set:req.body}
         )
         .then((user)=>
@@ -35,24 +35,27 @@ module.exports={
         )
         .catch((err)=>res.status(500).json(err));
     },
-    async removeUser(req,res){
-        try{
-            const user=await User.findOneAndRemove({_id:ObjectId(req.params.userId)})
-            if(user){
-                const thoughts=await Thought.deleteMany({username:user.username});
-                const friends=await user.updateMany({},
-                    {$pull:{friends:req.params.userId}});
-            } else{
-                res.status(404).json({message:"No user found with that Id"});
-            }
-            res.json({message:"User removed"});
-        } catch(err){
-            res.status(500).json(err);
+    async removeUser(req, res) {
+        try {
+          const user = await User.findOneAndRemove({
+            _id: ObjectId(req.params.userId),
+          });
+    
+          if (!user) {
+            res.status(404).json({ message: "No such user exists" });
+          } else {
+            const thoughts = await Thought.deleteMany({ username: user.username });
+            const friends = await User.updateMany({},
+              {$pull: { friends: req.params.userId }})
+            res.json({ message: "User successfully deleted" });
+          }
+        } catch (err) {
+          res.status(500).json(err);
         }
-    },
+      },
     addFriend(req,res){
         User.findByIdAndUpdate(
-            ObjectId(req.params.userid),
+            ObjectId(req.params.userId),
             {$addToSet:{friends:ObjectId(req.params.friendId)}}
         )
             .then((user)=>
