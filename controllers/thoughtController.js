@@ -47,7 +47,7 @@ module.exports={
                 const user=await User.updateOne(
                     {username:thought.username},
                     {$pull:{thoughts:ObjectId(req.params.thoughtId)}});
-                res.status(200).json({message:"Though removed"});
+                res.status(200).json({message:"Thought removed"});
             }
             
         }catch(err){
