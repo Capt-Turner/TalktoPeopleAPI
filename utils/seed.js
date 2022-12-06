@@ -17,36 +17,34 @@ connection.once('open',async()=>{
     for (let index=0;index<10;index++){
         const name=getRandomUsername();
         const mail=getRandomEmail();
-        const thinks=getRandomThoughts();
-        const reactions=getRandomReactions();
-        const friends=[];
+
         const newUser={
             username: name,
             email: mail,
-            thoughts: thinks,
-            friends: friends,
-        };
-        const newThought={
-            thoughtText: thinks,
-            username: name,
-            reactions: reactions,
-        };
-        const newReaction={
-            reactionBody: reactions,
-            username:name
         };
         users.push(newUser);
-        thoughts.push(newThought);
-        
     };
 
     await User.collection.insertMany(users);
-    await Thought.collection.insertMany(thoughts);
+    
+    for (const user of users){
+        const randThought=getRandomThoughts(5);
+        const thought=await Thought.create({
+            thoughtText: randThought,
+            username: user.username,
+        });
 
-
+        try{
+            const use=await User.findOneAndUpdate(
+                {username:user.username},
+                {$addToSet:{thoughts:thought._id}}
+            );
+        }   catch(err){
+            console.log(err);
+        }
+    }
 
     console.table(users);
-    console.table(thoughts);
     console.timeEnd('Done Seeding');
     process.exit(0);
 });
