@@ -1,5 +1,5 @@
 const {ObjectId}=require('mongoose').Types;
-const {User}=require('../models');
+const {User, Thought}=require('../models');
 
 module.exports={
     getUsers(req,res){
@@ -8,16 +8,11 @@ module.exports={
             .catch((err)=>res.status(500).json(err));
     },
     getSingleUser(req,res){
-        User.findOne({_id:req.params.userid})
-            .select('-__v')
+        User.findById(ObjectId(req.params.userId))
             .then(async(user)=>
                 !user
                     ?res.status(404).json({message:'No User found with that ID'})
-                    :res.json({
-                        user,
-                        friends: await friends(req.params.userid),
-                        thoughts: await thoughts(req.params.userid),
-                    })
+                    :res.json({user})
             )
             .catch((err)=>{
                 return res.status(500).json(err);
@@ -30,7 +25,7 @@ module.exports={
     },
     updateUser(req,res){
         User.findOneAndUpdate(
-            {_id:req.params.userid},
+            ObjectId(req.params.userid),
             {$set:req.body}
         )
         .then((user)=>
@@ -40,22 +35,25 @@ module.exports={
         )
         .catch((err)=>res.status(500).json(err));
     },
-    removeUser(req,res){
-        User.findOneAndRemove({_id:req.params.userid})
-            .then((user)=>
-                !user
-                    ?res.status(404).json({message:'No user found with that ID'})
-                    // Bonus to remove thoughts as well
-                    :res.json({message:'User removed but their Thoughts remain for now'})
-            )
-            .catch((err)=>{
-                res.status(500).json(err);
-            })
+    async removeUser(req,res){
+        try{
+            const user=await User.findOneAndRemove({_id:ObjectId(req.params.userId)})
+            if(user){
+                const thoughts=await Thought.deleteMany({username:user.username});
+                const friends=await user.updateMany({},
+                    {$pull:{friends:req.params.userId}});
+            } else{
+                res.status(404).json({message:"No user found with that Id"});
+            }
+            res.json({message:"User removed"});
+        } catch(err){
+            res.status(500).json(err);
+        }
     },
     addFriend(req,res){
-        User.findOneAndUpdate(
-            {_id:req.params.userid},
-            {$addToSet:{friends: req.body}}
+        User.findByIdAndUpdate(
+            ObjectId(req.params.userid),
+            {$addToSet:{friends:ObjectId(req.params.friendId)}}
         )
             .then((user)=>
                 !user
@@ -65,9 +63,9 @@ module.exports={
             .catch((err)=>res.status(500).json(err));
     },
     removeFriend(req,res){
-        User.findOneAndUpdate(
-            {_id:req.params.userid},
-            {$pull:{friends:[{userid: req.params.userid}]}}
+        User.findByIdAndUpdate(
+            ObjectId(req.params.userid),
+            {$pull:{friends:ObjectId(req.params.friendid)}}
         )
         .then((user)=>
             !user

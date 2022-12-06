@@ -14,7 +14,7 @@ connection.once('open',async()=>{
     const reactions=[];
     const friends=[];
     
-    for (let index=0;index<10;index++){
+    for (let index=0;index<5;index++){
         const name=getRandomUsername();
         const mail=getRandomEmail();
 
