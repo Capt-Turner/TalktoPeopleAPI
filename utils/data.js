@@ -81,16 +81,16 @@ const reactions=[
     'Thumbs down'
 ];
 
-
+const genRandomIndex=(arr)=>Math.floor(Math.random()*arr.length);
 
 const getRandomArrItem=(arr)=>arr[Math.floor(Math.random()*arr.length)];
 
-const getRandomUsername=()=>`${getRandomArrItem(names)}${Math.floor(Math.random()*10)}`;
+const getRandomUsername=()=>`${getRandomArrItem(names)}`;
 
-const getRandomEmail=()=>`${getRandomArrItem(emails)}${Math.floor(Math.random()*10)}`;
+const getRandomEmail=()=>`${getRandomArrItem(emails)}`;
 
-const getRandomThoughts=()=>`${getRandomArrItem(thoughts)}${Math.floor(Math.random()*10)}`;
+const getRandomThoughts=()=>`${getRandomArrItem(thoughts)}`;
 
-const getRandomReactions=()=>`${getRandomArrItem(reactions)}${Math.floor(Math.random()*5)}`;
+const getRandomReactions=()=>`${getRandomArrItem(reactions)}}`;
 
 module.exports={getRandomArrItem,getRandomUsername,getRandomEmail,getRandomThoughts,getRandomReactions};

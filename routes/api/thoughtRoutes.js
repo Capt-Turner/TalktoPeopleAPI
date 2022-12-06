@@ -11,8 +11,10 @@ const {
 
 router.route('/').get(getThoughts).post(think);
 
-router.route('/:thoughtid').get(getAThought).put(reThink).delete(unThink);
+router.route('/:thoughtId').get(getAThought).put(reThink).delete(unThink);
 
-router.route('/:thoughtid/reactions').post(react).delete(removeReact);
+router.route('/:thoughtId/reactions').post(react);
+
+router.route('/:thoughtId/reactions/:reactionId').delete(removeReact);
 
 module.exports=router;
